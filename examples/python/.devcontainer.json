@@ -1,7 +1,5 @@
 {
-    "build": {
-        "dockerfile": "../../Dockerfile"
-    },
+    "image": "jmgilman/dev-container",
     "mounts": [
         "source=jmgilman-dev-container-py,target=/nix,type=volume",
         "source=jmgilman-dev-container-py-ext,target=/home/vscode/.vscode-server/extensions,type=volume",

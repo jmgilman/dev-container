@@ -1,8 +1,7 @@
 version: '3'
 services:
   dev:
-    build:
-      context: ../../../
+    image: jmgilman/dev-container
     environment:
       DOCKER_HOST: tcp://localhost:2375
     volumes:
