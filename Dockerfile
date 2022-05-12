@@ -38,7 +38,7 @@ RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh && \
     nix-shell '<home-manager>' -A install
 
 # Build first generation
-COPY config.nix /home/${USER}/.config/nixpkgs/home.nix
+COPY config/config.nix /home/${USER}/.config/nixpkgs/home.nix
 RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh && \
     home-manager build
 
@@ -79,7 +79,7 @@ RUN echo "source /home/${USER}/.nix-profile/etc/profile.d/nix.sh" >> /etc/bash.b
     echo "source /home/${USER}/.nix-profile/etc/profile.d/nix.sh" >> /etc/zshrc
 
 # Copy direnv config
-COPY direnv.toml /etc
+COPY config/direnv.toml /etc
 
 # Bring in Nix
 COPY --from=base /nix /nix
