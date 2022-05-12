@@ -13,7 +13,6 @@
         pkgs.gawk
         pkgs.git
         pkgs.gh
-        pkgs.gnupg
         pkgs.gnused
         pkgs.jq
         pkgs.less

@@ -51,6 +51,14 @@ ARG GID
 ENV NIX_CONF_DIR /etc
 ENV DIRENV_CONFIG /etc
 
+## Install vscode deps
+RUN apt update && apt upgrade -y && apt install -y \
+    ca-certificates \
+    git \
+    gnupg \
+    ssh \
+    sudo
+
 # Create user
 RUN apt update && apt upgrade -y && apt install -y sudo ca-certificates && \
     groupadd -g ${GID} ${USER} && \
