@@ -1,0 +1,19 @@
+{
+    "build": {
+        "dockerfile": "src/Dockerfile"
+    },
+    "mounts": [
+        "source=jmgilman-dev-container,target=/nix,type=volume",
+        "source=jmgilman-dev-container-ext,target=/home/vscode/.vscode-server/extensions,type=volume",
+        "source=jmgilman-dev-container-extin,target=/home/vscode/.vscode-server-insiders/extensions,type=volume",
+    ],
+    "remoteUser": "vscode",
+    "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+            "zsh": {
+                "path": "/home/vscode/.nix-profile/bin/zsh"
+            }
+        }
+    }
+}
