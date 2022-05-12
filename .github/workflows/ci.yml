@@ -9,7 +9,7 @@ on:
       - '**.md'
   workflow_dispatch:
 
-  name: CI
+name: CI
 
 env:
   IMAGE_NAME: ${{ github.repository }}
