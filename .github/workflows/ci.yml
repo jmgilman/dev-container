@@ -39,11 +39,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build container locally
+        if: steps.cache.outputs.cache-to != 0
         run:  |
           docker buildx build -t test \
             --output type=docker \
             --cache-from ${{ steps.cache.outputs.cache-from }} \
             --cache-to ${{ steps.cache.outputs.cache-to }} .
+      - name: Build container locally
+        if: steps.cache.outputs.cache-to == 0
+        run:  |
+          docker buildx build -t test \
+            --output type=docker \
+            --cache-from ${{ steps.cache.outputs.cache-from }} .
       - name: Run container test
         run: |
           docker run \
