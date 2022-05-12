@@ -2,10 +2,12 @@ on:
   push:
     paths-ignore:
       - '.vscode/**'
+      - 'examples/**'
       - '**.md'
   pull_request:
     paths-ignore:
       - '.vscode/**'
+      - 'examples/**'
       - '**.md'
   workflow_dispatch:
 
