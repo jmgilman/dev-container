@@ -99,4 +99,7 @@ RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh && \
     rm /home/${USER}/result && \
     nix-collect-garbage -d
 
-CMD /home/${USER}/.nix-profile/bin/zsh
+# Copy entrypoint
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
