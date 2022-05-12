@@ -1,0 +1,32 @@
+version: '3'
+services:
+  dev:
+    build:
+      context: ../../../
+    environment:
+      DOCKER_HOST: tcp://localhost:2375
+    volumes:
+      - ..:/workspace:cached
+      - nix:/nix
+      - ext:/home/vscode/.vscode-server/extensions
+      - ext-in:/home/vscode/.vscode-server-insiders/extensions
+    security_opt:
+      - label:disable
+    network_mode: "service:docker"
+
+  docker:
+    image: docker:dind-rootless
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    privileged: true
+    volumes:
+      - docker:/var/lib/docker
+    security_opt:
+      - label:disable
+    network_mode: bridge
+
+volumes:
+  ext:
+  ext-in:
+  nix:
+  docker:
