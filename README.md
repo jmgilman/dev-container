@@ -4,6 +4,9 @@
     <a href="https://github.com/jmgilman/dev-container/actions/workflows/ci.yml">
         <img src="https://github.com/jmgilman/dev-container/actions/workflows/ci.yml/badge.svg"/>
     </a>
+    <a href="https://hub.docker.com/repository/docker/jmgilman/dev-container">
+        <img src="https://img.shields.io/docker/v/jmgilman/dev-container"/>
+    </a>
     <img src="https://img.shields.io/github/license/jmgilman/dev-container"/>
 </p>
 
