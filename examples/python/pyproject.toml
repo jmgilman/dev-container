@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "test"
+version = "0.1.0"
+description = "A test Python project"
+authors = ["Joshua Gilman <joshuagilman@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+requests = "^2.27.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
