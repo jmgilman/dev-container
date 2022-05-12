@@ -59,6 +59,7 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v2
         with:
+          context: ./src
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
