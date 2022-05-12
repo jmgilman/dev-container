@@ -15,9 +15,41 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  test:
+    name: Test Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Generate cache references
+        uses: int128/docker-build-cache-config-action@v1
+        id: cache
+        with:
+          image: ghcr.io/${{ github.repository }}/cache-test
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Github Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build container locally
+        run:  |
+          docker buildx build -t test \
+            --output type=docker \
+            --cache-from ${{ steps.cache.outputs.cache-from }} \
+            --cache-to ${{ steps.cache.outputs.cache-to }} .
+      - name: Run container test
+        run: |
+          docker run \
+          -v "$(pwd)/test:/workspace" \
+          --entrypoint /bin/bash \
+          test -c 'cd /workspace && ./test.sh'
   push:
     name: Push Docker image
     runs-on: ubuntu-latest
+    needs: [test]
     steps:
       - name: Set up QEMU for multi-arch builds
         uses: docker/setup-qemu-action@master
