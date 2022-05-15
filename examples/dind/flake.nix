@@ -10,7 +10,8 @@
         pkgs = import nixpkgs {
           inherit system;
         };
-      in {
+      in
+      {
         devShell = pkgs.mkShell {
           packages = [
             pkgs.docker-client

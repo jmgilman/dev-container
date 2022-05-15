@@ -21,7 +21,8 @@
             pkgs.poetry2nix.defaultPoetryOverrides
           ];
         };
-      in {
+      in
+      {
         devShell = pkgs.mkShell {
           packages = [
             project
