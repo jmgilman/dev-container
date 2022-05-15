@@ -13,7 +13,7 @@
       in {
         devShell = pkgs.mkShell {
           packages = [
-            # TODO
+            pkgs.hadolint
           ];
         };
       }
