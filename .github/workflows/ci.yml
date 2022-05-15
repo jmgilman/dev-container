@@ -1,16 +1,16 @@
 on:
   push:
-    paths-ignore:
-      - '.vscode/**'
-      - 'docs/**'
-      - 'examples/**'
-      - '**.md'
+    paths:
+      - 'Dockerfile'
+      - 'docker-entrypoint.sh'
+      - 'config/**'
+      - 'test/**'
   pull_request:
-    paths-ignore:
-      - '.vscode/**'
-      - 'docs/**'
-      - 'examples/**'
-      - '**.md'
+    paths:
+      - 'Dockerfile'
+      - 'docker-entrypoint.sh'
+      - 'config/**'
+      - 'test/**'
   workflow_dispatch:
 
 name: CI
