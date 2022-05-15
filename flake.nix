@@ -11,6 +11,9 @@
         pkgs = import nixpkgs {
           inherit system;
         };
+        checkCommit = pkgs.writeShellScriptBin "checkCommit" ''
+          cog verify "$(cat $1)"
+        '';
       in
       {
         checks = {
@@ -18,13 +21,22 @@
             src = ./.;
             hooks = {
               nixpkgs-fmt.enable = true;
+              commit-check = {
+                enable = true;
+                name = "Check commit message";
+                entry = "checkCommit";
+                language = "system";
+                stages = [ "commit-msg" ];
+              };
             };
           };
         };
         devShell = pkgs.mkShell {
           inherit (self.checks.${system}.pre-commit-check) shellHook;
           packages = [
+            checkCommit
             pkgs.hadolint
+            pkgs.cocogitto
           ];
         };
       }
