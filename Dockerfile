@@ -31,7 +31,7 @@ RUN sed -i 's/%sudo.*ALL/%sudo   ALL=(ALL:ALL) NOPASSWD:ALL/' /etc/sudoers && \
 
 # Copy configs
 USER ${USER}
-RUN mkdir -p /home/${USER}/.config/devcontainer
+RUN mkdir -p /home/${USER}/.config/devcontainer/extra && touch /home/${USER}/.config/devcontainer/extra/.flakekeep
 COPY --chown=${USER}:${USER} config/flake.nix /home/${USER}/.config/devcontainer/flake.nix
 COPY --chown=${USER}:${USER} config/flake.lock /home/${USER}/.config/devcontainer/flake.lock
 COPY --chown=${USER}:${USER} config/config.nix /home/${USER}/.config/devcontainer/config.nix

@@ -15,6 +15,7 @@
       homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
         # Specify the path to your home configuration here
         configuration = import ./config.nix;
+        extraModules = map (n: "${./extra}/${n}") (builtins.attrNames (builtins.readDir ./extra));
 
         inherit system username;
         homeDirectory = "/home/${username}";
