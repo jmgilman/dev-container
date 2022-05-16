@@ -9,6 +9,9 @@ ARG UID
 ARG GID
 ARG NIX_INSTALLER=https://nixos.org/nix/install
 
+# Set shell and check for pipe fails
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # Install deps required by Nix installer
 RUN apt update && apt upgrade -y && apt install -y \
     ca-certificates \
