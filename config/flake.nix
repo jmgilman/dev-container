@@ -11,7 +11,8 @@
     let
       system = "ARCH";
       username = "USER";
-    in {
+    in
+    {
       homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
         # Specify the path to your home configuration here
         configuration = import ./config.nix;

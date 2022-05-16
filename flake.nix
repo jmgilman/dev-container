@@ -2,7 +2,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
-    pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
+    pre-commit-hooks.url = "github:jmgilman/pre-commit-hooks.nix/hadolint";
   };
 
   outputs = { self, nixpkgs, flake-utils, pre-commit-hooks }:
@@ -14,7 +14,7 @@
         };
 
         # Configure home-manager overrides
-        hm = pkgs.lib.generators.toPretty {} {
+        hm = pkgs.lib.generators.toPretty { } {
           programs.zsh = {
             envExtra = ''
               # Custom functions
@@ -36,6 +36,7 @@
           pre-commit-check = pre-commit-hooks.lib.${system}.run {
             src = ./.;
             hooks = {
+              hadolint.enable = true;
               nixpkgs-fmt.enable = true;
               commit-check = {
                 enable = true;
@@ -69,6 +70,7 @@
             checkCommit
             pkgs.cocogitto
             pkgs.hadolint
+            pkgs.nixpkgs-fmt
           ];
         };
       }
