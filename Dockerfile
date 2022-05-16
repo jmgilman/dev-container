@@ -23,17 +23,19 @@ RUN apt update && apt upgrade -y && apt install -y \
 RUN groupadd -g ${GID} ${USER} && \
     useradd -u ${UID} -g ${GID} -G sudo -m ${USER} -s /bin/bash
 
-# Install Nix and enable flakes
-ENV USER=${USER}
-ENV NIX_PATH=/home/${USER}/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels
-ENV NIX_CONF_DIR /etc
+# Configure sudo and Nix
 RUN sed -i 's/%sudo.*ALL/%sudo   ALL=(ALL:ALL) NOPASSWD:ALL/' /etc/sudoers && \
-    curl -L ${NIX_INSTALLER} | sudo -u ${USER} NIX_INSTALLER_NO_MODIFY_PROFILE=1 sh && \
     echo "sandbox = false" > /etc/nix.conf && \
     echo "experimental-features = nix-command flakes" >> /etc/nix.conf
 
-# Copy configs
+# Install Nix and enable flakes
 USER ${USER}
+ENV USER=${USER}
+ENV NIX_PATH=/home/${USER}/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels
+ENV NIX_CONF_DIR /etc
+RUN curl -L ${NIX_INSTALLER} | NIX_INSTALLER_NO_MODIFY_PROFILE=1 sh
+
+# Copy configs
 RUN mkdir -p /home/${USER}/.config/devcontainer/extra
 COPY --chown=${USER}:${USER} config/flake.nix /home/${USER}/.config/devcontainer/flake.nix
 COPY --chown=${USER}:${USER} config/flake.lock /home/${USER}/.config/devcontainer/flake.lock
