@@ -54,7 +54,7 @@
           shellHook = ''
             ${self.checks.${system}.pre-commit-check.shellHook}
             # Push local home-manager config to filesystem
-            cat <<EOT > /tmp/local.nix
+            cat << 'EOT' > /tmp/local.nix
             { config, pkgs, ... }:
               ${hm}
             EOT
