@@ -60,12 +60,14 @@ ENV NIX_CONF_DIR /etc
 ENV DIRENV_CONFIG /etc
 
 ## Install vscode deps
-RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates \
     git \
     gnupg \
+    locales \
     ssh \
-    sudo
+    sudo && \
+    rm -rf /var/lib/apt/lists/*
 
 # Create user
 RUN groupadd -g ${GID} ${USER} && \
@@ -73,24 +75,20 @@ RUN groupadd -g ${GID} ${USER} && \
 COPY --from=base --chown=${USER}:${USER} /home/${USER} /home/${USER}
 
 # Configure en_US.UTF-8 locale
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends locales && \
-    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
+RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
     locale-gen
 
 # Configure sudo
-RUN apt-get install -y --no-install-recommends sudo && \
-    sed -i 's/%sudo.*ALL/%sudo   ALL=(ALL:ALL) NOPASSWD:ALL/' /etc/sudoers
+RUN sed -i 's/%sudo.*ALL/%sudo   ALL=(ALL:ALL) NOPASSWD:ALL/' /etc/sudoers
 
 # Setup Nix environment
 RUN echo "source /home/${USER}/.nix-profile/etc/profile.d/nix.sh" >> /etc/bash.bashrc && \
     echo "source /home/${USER}/.nix-profile/etc/profile.d/nix.sh" >> /etc/zshrc
 
-# Copy direnv config
-COPY config/direnv.toml /etc
-
-# Bring in Nix
+# Copy nix and configs
 COPY --from=base /nix /nix
 COPY --from=base /etc/nix.conf /etc/nix.conf
+COPY config/direnv.toml /etc
 
 USER ${USER}
 
