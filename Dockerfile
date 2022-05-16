@@ -13,7 +13,7 @@ ARG NIX_INSTALLER=https://nixos.org/nix/install
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Install deps required by Nix installer
-RUN apt update && apt upgrade -y && apt install -y \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
     sudo \
@@ -60,7 +60,7 @@ ENV NIX_CONF_DIR /etc
 ENV DIRENV_CONFIG /etc
 
 ## Install vscode deps
-RUN apt update && apt upgrade -y && apt install -y \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates \
     git \
     gnupg \
@@ -68,18 +68,17 @@ RUN apt update && apt upgrade -y && apt install -y \
     sudo
 
 # Create user
-RUN apt update && apt upgrade -y && apt install -y sudo ca-certificates && \
-    groupadd -g ${GID} ${USER} && \
+RUN groupadd -g ${GID} ${USER} && \
     useradd -u ${UID} -g ${GID} -G sudo -m ${USER} -s /bin/bash
 COPY --from=base --chown=${USER}:${USER} /home/${USER} /home/${USER}
 
 # Configure en_US.UTF-8 locale
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y locales && \
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends locales && \
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
     locale-gen
 
 # Configure sudo
-RUN apt install -y sudo && \
+RUN apt-get install -y --no-install-recommends sudo && \
     sed -i 's/%sudo.*ALL/%sudo   ALL=(ALL:ALL) NOPASSWD:ALL/' /etc/sudoers
 
 # Setup Nix environment
