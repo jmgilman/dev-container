@@ -21,26 +21,29 @@ RUN groupadd -g ${GID} ${USER} && \
     useradd -u ${UID} -g ${GID} -G sudo -m ${USER} -s /bin/bash
 
 # Install Nix and enable flakes
+ENV USER=${USER}
+ENV NIX_PATH=/home/${USER}/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels
+ENV NIX_CONF_DIR /etc
 RUN sed -i 's/%sudo.*ALL/%sudo   ALL=(ALL:ALL) NOPASSWD:ALL/' /etc/sudoers && \
     curl -L ${NIX_INSTALLER} | sudo -u ${USER} NIX_INSTALLER_NO_MODIFY_PROFILE=1 sh && \
     echo "sandbox = false" > /etc/nix.conf && \
     echo "experimental-features = nix-command flakes" >> /etc/nix.conf
 
-# Install home-manager
+# Copy configs
 USER ${USER}
-WORKDIR /home/${USER}
-ENV USER=${USER}
-ENV NIX_PATH=/home/${USER}/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels
-RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh && \
-    nix-env --set-flag priority 10 nix-2.8.0 && \
-    nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager && \
-    nix-channel --update && \
-    nix-shell '<home-manager>' -A install
+RUN mkdir -p /home/${USER}/.config/devcontainer
+COPY --chown=${USER}:${USER} config/flake.nix /home/${USER}/.config/devcontainer/flake.nix
+COPY --chown=${USER}:${USER} config/flake.lock /home/${USER}/.config/devcontainer/flake.lock
+COPY --chown=${USER}:${USER} config/config.nix /home/${USER}/.config/devcontainer/config.nix
 
-# Build first generation
-COPY config/config.nix /home/${USER}/.config/nixpkgs/home.nix
+# Fix architecture and user
+RUN sed -i "s/ARCH/$(uname -m)-$(uname -s | tr '[:upper:]' '[:lower:]')/" /home/${USER}/.config/devcontainer/flake.nix
+RUN sed -i "s/USER/${USER}/" /home/${USER}/.config/devcontainer/flake.nix
+
+# Build home-manager
+WORKDIR /home/${USER}/.config/devcontainer
 RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh && \
-    home-manager build
+    nix build --no-link .#homeConfigurations.${USER}.activationPackage
 
 FROM debian:stable-slim
 
@@ -92,12 +95,11 @@ RUN mkdir -p /home/${USER}/.vscode-server/extensions && \
     mkdir -p /home/${USER}/.vscode-server-insiders/extensions
 
 # Switch to home-manager environment
-WORKDIR /home/${USER}
+WORKDIR /home/${USER}/.config/devcontainer
 ENV USER=${USER}
 RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh && \
-    home-manager switch && \
-    rm /home/${USER}/result && \
-    nix-collect-garbage -d
+    nix-env --set-flag priority 10 nix-2.8.1 && \
+    "$(nix path-info .#homeConfigurations.${USER}.activationPackage)"/activate
 
 # Copy entrypoint
 COPY docker-entrypoint.sh /docker-entrypoint.sh
