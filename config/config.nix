@@ -1,4 +1,4 @@
-{ config, pkgs, machnix, ... }:
+{ config, pkgs, ... }:
 {
   # User-specific packages
   home.packages = [
@@ -21,6 +21,9 @@
     pkgs.ripgrep
     pkgs.tldr
   ];
+
+  # Enable home-manager
+  programs.home-manager.enable = true;
 
   # Enable direnv with nix support
   programs.direnv = {

@@ -7,6 +7,7 @@
         "source=jmgilman-dev-container-ext,target=/home/vscode/.vscode-server/extensions,type=volume",
         "source=jmgilman-dev-container-extin,target=/home/vscode/.vscode-server-insiders/extensions,type=volume"
     ],
+    "postStartCommand": "cd /workspaces/dev-container && nix develop -c /bin/bash -c \"echo 'Pre-loading complete!'\"",
     "remoteUser": "vscode",
     "settings": {
         "terminal.integrated.defaultProfile.linux": "zsh",

@@ -1,5 +1,7 @@
 on:
   push:
+    branches:
+      - master
     paths:
       - 'Dockerfile'
       - 'docker-entrypoint.sh'
