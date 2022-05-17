@@ -18,8 +18,8 @@
           programs.zsh = {
             envExtra = ''
               # Custom functions
-              cc() {
-                cog commit $@ && git commit --amend --no-edit
+              cmt() {
+                git commit -m "$1: $2"
               }
             '';
           };
