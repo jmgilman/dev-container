@@ -36,8 +36,6 @@
           pre-commit-check = pre-commit-hooks.lib.${system}.run {
             src = ./.;
             hooks = {
-              hadolint.enable = true;
-              nixpkgs-fmt.enable = true;
               commit-check = {
                 enable = true;
                 name = "Check commit message";
@@ -45,6 +43,9 @@
                 language = "system";
                 stages = [ "commit-msg" ];
               };
+              hadolint.enable = true;
+              nixpkgs-fmt.enable = true;
+              prettier.enable = true;
             };
           };
         };

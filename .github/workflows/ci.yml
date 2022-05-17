@@ -3,16 +3,16 @@ on:
     branches:
       - master
     paths:
-      - 'Dockerfile'
-      - 'docker-entrypoint.sh'
-      - 'config/**'
-      - 'test/**'
+      - "Dockerfile"
+      - "docker-entrypoint.sh"
+      - "config/**"
+      - "test/**"
   pull_request:
     paths:
-      - 'Dockerfile'
-      - 'docker-entrypoint.sh'
-      - 'config/**'
-      - 'test/**'
+      - "Dockerfile"
+      - "docker-entrypoint.sh"
+      - "config/**"
+      - "test/**"
   workflow_dispatch:
 
 name: CI
@@ -42,14 +42,14 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build container locally
         if: steps.cache.outputs.cache-to != 0
-        run:  |
+        run: |
           docker buildx build -t test \
             --output type=docker \
             --cache-from ${{ steps.cache.outputs.cache-from }} \
             --cache-to ${{ steps.cache.outputs.cache-to }} .
       - name: Build container locally
         if: steps.cache.outputs.cache-to == 0
-        run:  |
+        run: |
           docker buildx build -t test \
             --output type=docker \
             --cache-from ${{ steps.cache.outputs.cache-from }} .
@@ -115,11 +115,11 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ghcr.io/${{ env.IMAGE_NAME }}@${{ steps.build-and-push.outputs.digest }}
-          format: 'sarif'
+          format: "sarif"
           ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
-          output: 'trivy-results.sarif'
+          severity: "CRITICAL,HIGH"
+          output: "trivy-results.sarif"
       - name: Upload Trivy scan results
         uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: "trivy-results.sarif"

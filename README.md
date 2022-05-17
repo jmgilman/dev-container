@@ -14,11 +14,11 @@
 
 ## Features
 
-* Based on the stable [Debian slim image][3]
-* Includes the [Nix package manager][4]
-* Provides a rich [zsh][5] experience
-* Packaged with modern tooling (i.e. [fzf][6], [ripgrep][7], etc.)
-* Focused on reproducible development environments using [Nix flakes][8].
+- Based on the stable [Debian slim image][3]
+- Includes the [Nix package manager][4]
+- Provides a rich [zsh][5] experience
+- Packaged with modern tooling (i.e. [fzf][6], [ripgrep][7], etc.)
+- Focused on reproducible development environments using [Nix flakes][8].
 
 ## Quickstart
 
@@ -27,21 +27,21 @@ contents:
 
 ```json
 {
-    "image": "jmgilman/dev-container:v1",
-    "mounts": [
-        "source=jmgilman-dev,target=/nix,type=volume",
-        "source=jmgilman-dev-ext,target=/home/vscode/.vscode-server/extensions,type=volume",
-        "source=jmgilman-dev-extin,target=/home/vscode/.vscode-server-insiders/extensions,type=volume",
-    ],
-    "remoteUser": "vscode",
-    "settings": {
-        "terminal.integrated.defaultProfile.linux": "zsh",
-        "terminal.integrated.profiles.linux": {
-            "zsh": {
-                "path": "/home/vscode/.nix-profile/bin/zsh"
-            },
-        }
+  "image": "jmgilman/dev-container:v1",
+  "mounts": [
+    "source=jmgilman-dev,target=/nix,type=volume",
+    "source=jmgilman-dev-ext,target=/home/vscode/.vscode-server/extensions,type=volume",
+    "source=jmgilman-dev-extin,target=/home/vscode/.vscode-server-insiders/extensions,type=volume"
+  ],
+  "remoteUser": "vscode",
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "zsh",
+    "terminal.integrated.profiles.linux": {
+      "zsh": {
+        "path": "/home/vscode/.nix-profile/bin/zsh"
+      }
     }
+  }
 }
 ```
 
