@@ -1,4 +1,6 @@
-# dev-container
+![](logo.png)
+
+<h1 align="center">nix-devcontainer</h1>
 
 <p align="center">
     <a href="https://github.com/jmgilman/dev-container/actions/workflows/ci.yml">
@@ -10,7 +12,7 @@
     <img src="https://img.shields.io/github/license/jmgilman/dev-container"/>
 </p>
 
-> A [devcontainer][1] built on Debian and powered by [Nix][2].
+<p align="center"> A <a href="https://code.visualstudio.com/docs/remote/containers">devcontainer</a> built on Debian and powered by <a href="https://nixos.org/">Nix</a></p>
 
 ## Features
 
