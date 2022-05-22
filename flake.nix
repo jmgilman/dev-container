@@ -2,10 +2,10 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
-    pre-commit-hooks.url = "github:jmgilman/pre-commit-hooks.nix/hadolint";
+    nix-pre-commit.url = "github:jmgilman/nix-pre-commit";
   };
 
-  outputs = { self, nixpkgs, flake-utils, pre-commit-hooks }:
+  outputs = { self, nixpkgs, flake-utils, nix-pre-commit }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         # Inherit system packages
@@ -29,32 +29,50 @@
         checkCommit = pkgs.writeShellScriptBin "checkCommit" ''
           cog verify "$(cat $1)"
         '';
+
+        # Define pre-commit config
+        config = {
+          repos = [
+            {
+              repo = "local";
+              hooks = [
+                {
+                  id = "check-commit";
+                  entry = "${checkCommit}/bin/checkCommit";
+                  language = "system";
+                  stages = [ "commit-msg" ];
+                }
+                {
+                  id = "hadolint";
+                  entry = "${pkgs.hadolint}/bin/hadolint";
+                  language = "system";
+                  files = "Dockerfile";
+                }
+                {
+                  id = "nixpkgs-fmt";
+                  entry = "${pkgs.nixpkgs-fmt}/bin/nixpkgs-fmt";
+                  language = "system";
+                  files = "\\.nix";
+                }
+                {
+                  id = "prettier";
+                  entry = "${pkgs.nodePackages.prettier}/bin/prettier";
+                  language = "system";
+                  types_or = [ "markdown" "yaml" ];
+                }
+              ];
+            }
+          ];
+        };
+        configHook = (nix-pre-commit.lib.${system}.mkConfig {
+          inherit pkgs config;
+        }).shellHook;
       in
       {
-        # Add custom pre-commit checks
-        checks = {
-          pre-commit-check = pre-commit-hooks.lib.${system}.run {
-            src = ./.;
-            hooks = {
-              commit-check = {
-                enable = true;
-                name = "Check commit message";
-                entry = "checkCommit";
-                language = "system";
-                stages = [ "commit-msg" ];
-              };
-              hadolint.enable = true;
-              nixpkgs-fmt.enable = true;
-              prettier.enable = true;
-            };
-          };
-        };
-
         # Configure development environment
         devShell = pkgs.mkShell {
-          inherit (self.checks.${system}.pre-commit-check);
           shellHook = ''
-            ${self.checks.${system}.pre-commit-check.shellHook}
+            ${configHook}
             # Push local home-manager config to filesystem
             cat << 'EOT' > /tmp/local.nix
             { config, pkgs, ... }:
@@ -68,10 +86,8 @@
             fi
           '';
           packages = [
-            checkCommit
             pkgs.cocogitto
-            pkgs.hadolint
-            pkgs.nixpkgs-fmt
+            pkgs.pre-commit
           ];
         };
       }
