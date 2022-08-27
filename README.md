@@ -27,7 +27,7 @@ contents:
 
 ```json
 {
-  "image": "jmgilman/dev-container:v1",
+  "image": "ghcr.io/jmgilman/dev-container:sha-6124ab0"",
   "mounts": [
     "source=jmgilman-dev,target=/nix,type=volume",
     "source=jmgilman-dev-ext,target=/home/vscode/.vscode-server/extensions,type=volume",
